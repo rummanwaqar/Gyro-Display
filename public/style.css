@@ -1,0 +1,11 @@
+#container {
+	background-color: #F5F5DC;
+	border-style: dotted;
+	border-width: 1px;
+	width: 100px;
+	padding: 20px;
+}
+
+.value {
+	padding: 3px;
+}
