@@ -1,11 +1,26 @@
+#heading {
+	display: inline-block;
+	width: 100px;
+	padding: 5px;
+	margin: auto;
+}
+
 #container {
 	background-color: #F5F5DC;
-	border-style: dotted;
-	border-width: 1px;
-	width: 100px;
-	padding: 20px;
+	width: 235px;
+	padding: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin: auto;
 }
 
 .value {
 	padding: 3px;
+	display: inline-block;
+	width: 65px;
+	text-align: center;
+}
+
+#flot-placeholder {
+	margin: auto;
 }

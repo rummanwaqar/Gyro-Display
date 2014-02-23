@@ -6,7 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css">
 		<script type="text/javascript" src="jquery-1.11.0.min.js"></script>
 		<script type="text/javascript" src="jquery.flot.js"></script>
-		<script type="text/javascript" src="jquery.flot.time.js"></script>
+		<!--<script type="text/javascript" src="jquery.flot.time.js"></script>-->
 		<script type="text/javascript" src="jquery.flot.axislabels.js"></script>
 		<script type="text/javascript">
 		/*! Socket.IO.min.js build:0.9.16, production. Copyright(c) 2011 LearnBoost <dev@learnboost.com> MIT Licensed */
@@ -14,25 +14,67 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
 </script>
 		<script type="text/javascript" src="plot_setup.js"></script>
 		<script type="text/javascript">
-		var server = io.connect('http://192.168.1.34:8000');
-		var count = 0;
-		server.on('data', function(data) {
-			data = JSON.parse(data['data']);
-			$("#x").html('X: ' + data['x']);
-            $("#y").html('Y: ' + data['y']);
-            $("#z").html('Z: ' + data['z']);
+		var server = io.connect('http://192.168.0.102:8000');
+
+		var totalPoints = 100;
+		var dataX = Array.apply(null, new Array(totalPoints)).map(Number.prototype.valueOf,0);;
+		var dataY = Array.apply(null, new Array(totalPoints)).map(Number.prototype.valueOf,0);;
+		var dataZ = Array.apply(null, new Array(totalPoints)).map(Number.prototype.valueOf,0);;
+		
+		var updateInterval = 100;
+		var counter = 0;
+		
+
+		var dataset = [
+			{
+				label: 'X',
+				data: dataX,
+				color: "#00FF00"
+			},
+			{
+				label: 'Y',
+				data: dataY,
+				color: "#FF0000"
+			},
+			{
+				label: 'Z',
+				data: dataZ,
+				color: "#0000FF"
+			}
+
+		];
+
+		server.on('data', function(serverData) {
+			serverData = JSON.parse(serverData['data']);
+			$("#x").html('X: ' + serverData['x']);
+            $("#y").html('Y: ' + serverData['y']);
+            $("#z").html('Z: ' + serverData['z']);
+
+            // remove the first item of array
+            dataX.shift();
+            dataY.shift();
+            dataZ.shift();
+
+            var temp = [counter, serverData['x']]; // data format [x,y]
+            dataX.push(temp);
+            var temp = [counter, serverData['y']]; // data format [x,y]
+            dataY.push(temp);
+            var temp = [counter, serverData['z']]; // data format [x,y]
+            dataZ.push(temp);
+			$.plot($("#flot-placeholder"), dataset, options);
+			counter = counter + 1;
 		});
 		</script>
 	</head>
 
 	<body>
-		<h1>Gyroscope</h1>
+		<h1 align="center">Gyroscope</h1>
 		<div id="container">
-			<div id="x" class="value">X: 0</div>
-			<div id="y" class="value">Y: 0</div>
-			<div id="z" class="value">Z: 0</div>
+			<span id="x" class="value">X: 0</span>
+			<span id="y" class="value">Y: 0</span>
+			<span id="z" class="value">Z: 0</span>
 		</div>
-
-		<div id="flot-placeholder" style="width:600px;height:300px"></div>	
+		<br />
+		<div id="flot-placeholder" style="width:1000px;height:800px"></div>	
 	</body>
 </html>
